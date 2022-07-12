@@ -1,2 +1,2 @@
 # AQA_Pet
-This is the Automation QA Pet Project
+This is Automation QA Pet Project
