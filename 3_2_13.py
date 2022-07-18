@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 import time
 import unittest
 
+# можно добавить try/finally
+
 class TestAbs(unittest.TestCase):
     def test_abs1(self):
         # 1_test
