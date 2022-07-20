@@ -31,6 +31,9 @@ def answer():
     return str(math.log(int(time.time())))
 
 
+pieces = []
+
+
 @pytest.mark.parametrize('link', links)
 class TestUFO():
     def test_messages(self, browser, link):
@@ -48,11 +51,17 @@ class TestUFO():
         feedback = browser.find_element(By.CSS_SELECTOR, '.smart-hints__hint')
         parsed_feedback = feedback.text
         if parsed_feedback != 'Correct!':
-            print(parsed_feedback)
+            pieces.append(parsed_feedback)
+        if link == links[-1]:
+            print(*pieces)
         assert parsed_feedback == 'Correct!', f'There is no right message on {link}'
+
 
 if __name__ == "__main__":
     pytest.main()
 
+
 # по айдишкам ember лучше не искать, они же генерируются фреймворком
 # Попробуйте написать какой-нибудь css селектор используя классы элемента
+
+# pytest -s -v --tb=line 3_6_3.py
