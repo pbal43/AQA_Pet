@@ -27,17 +27,19 @@ def browser():
     browser.quit()
 
 
+def answer():
+    return str(math.log(int(time.time())))
+
+
 @pytest.mark.parametrize('link', links)
 class TestUFO():
-    pieces = []
     def test_messages(self, browser, link):
         browser.get(link)
         WebDriverWait(browser, 15).until(
             EC.visibility_of_any_elements_located((By.TAG_NAME, 'textarea'))
         )
         inputik = browser.find_element(By.TAG_NAME, 'textarea')
-        answer = math.log(int(time.time()))
-        inputik.send_keys(str(answer))
+        inputik.send_keys(answer())
         buttonchik = browser.find_element(By.CSS_SELECTOR, 'button.submit-submission')
         buttonchik.click()
         WebDriverWait(browser, 10).until(
@@ -46,6 +48,11 @@ class TestUFO():
         feedback = browser.find_element(By.CSS_SELECTOR, '.smart-hints__hint')
         parsed_feedback = feedback.text
         if parsed_feedback != 'Correct!':
-            self.pieces.append(parsed_feedback)
+            print(parsed_feedback)
         assert parsed_feedback == 'Correct!', f'There is no right message on {link}'
-    print(pieces)
+
+if __name__ == "__main__":
+    pytest.main()
+
+# по айдишкам ember лучше не искать, они же генерируются фреймворком
+# Попробуйте написать какой-нибудь css селектор используя классы элемента
