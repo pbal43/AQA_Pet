@@ -6,7 +6,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 import math
 
-answer = math.log(int(time.time()))
+
 links = ['https://stepik.org/lesson/236895/step/1',
         'https://stepik.org/lesson/236896/step/1',
         'https://stepik.org/lesson/236897/step/1',
@@ -16,7 +16,6 @@ links = ['https://stepik.org/lesson/236895/step/1',
         'https://stepik.org/lesson/236904/step/1',
         'https://stepik.org/lesson/236905/step/1'
         ]
-pieces = []
 
 
 @pytest.fixture(scope="function")
@@ -30,19 +29,23 @@ def browser():
 
 @pytest.mark.parametrize('link', links)
 class TestUFO():
+    pieces = []
     def test_messages(self, browser, link):
         browser.get(link)
         WebDriverWait(browser, 15).until(
-            EC.visibility_of((By.ID, "ember92"))
+            EC.visibility_of_any_elements_located((By.TAG_NAME, 'textarea'))
         )
-        inputik = browser.find_element(By.ID, 'ember92')
-        inputik.send_keys(answer)
-        buttonchik = browser.find_element(By.CSS_SELECTOR, 'button.btn')
+        inputik = browser.find_element(By.TAG_NAME, 'textarea')
+        answer = math.log(int(time.time()))
+        inputik.send_keys(str(answer))
+        buttonchik = browser.find_element(By.CSS_SELECTOR, 'button.submit-submission')
         buttonchik.click()
         WebDriverWait(browser, 10).until(
-            EC.visibility_of((By.CSS_SELECTOR, "#ember209 .smart-hints__hint"))
+            EC.visibility_of_any_elements_located((By.CSS_SELECTOR, '.smart-hints__hint'))
         )
-        feedback = browser.find_element(By.CSS_SELECTOR, '#ember209 .smart-hints__hint')
+        feedback = browser.find_element(By.CSS_SELECTOR, '.smart-hints__hint')
         parsed_feedback = feedback.text
-        pieces.append(parsed_feedback)
-        assert parsed_feedback == 'Correct!', f'There is no right message here {link}'
+        if parsed_feedback != 'Correct!':
+            self.pieces.append(parsed_feedback)
+        assert parsed_feedback == 'Correct!', f'There is no right message on {link}'
+    print(pieces)
